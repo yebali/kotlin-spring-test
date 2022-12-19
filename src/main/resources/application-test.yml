@@ -12,4 +12,4 @@ spring:
     database: postgresql
     properties:
       hibernate:
-        default_batch_fetch_size: 10
+        default_batch_fetch_size: 50

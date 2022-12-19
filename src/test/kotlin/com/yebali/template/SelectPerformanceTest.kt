@@ -6,6 +6,8 @@ import com.yebali.template.entity.Team
 import com.yebali.template.repository.CardRepository
 import com.yebali.template.repository.MemberRepository
 import com.yebali.template.repository.TeamRepository
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,9 +41,9 @@ class SelectPerformanceTest {
     fun init() {
         val teamCount = 100
         val memberCountPerTeam = 100
-        val cardCountPerMember = 100
+        val cardCountPerMember = 50
 
-        val teamsToInsert = (0..teamCount).map { Team(name = "team-$it") }
+        val teamsToInsert = (1..teamCount).map { Team(name = "team-$it") }
 
         jdbcTemplate.batchUpdate(
             """insert into team(name) values (?)""",
@@ -56,7 +58,7 @@ class SelectPerformanceTest {
 
         val teams = teamRepository.findAll()
         val memberToInsert = teams.flatMap { team ->
-            (0..memberCountPerTeam).map {
+            (1..memberCountPerTeam).map {
                 Member(name = "member-${team.id}-$it", team = team)
             }
         }
@@ -75,7 +77,7 @@ class SelectPerformanceTest {
 
         val members = memberRepository.findAll()
         val cardToInsert = members.flatMap { member ->
-            (0..cardCountPerMember).map { Card(name = "card-${member.id}-$it", member = member) }
+            (1..cardCountPerMember).map { Card(name = "card-${member.id}-$it", member = member) }
         }
 
         jdbcTemplate.batchUpdate(
@@ -86,7 +88,7 @@ class SelectPerformanceTest {
                     ps.setLong(2, cardToInsert[i].member!!.id)
                 }
 
-                override fun getBatchSize() = memberCountPerTeam * cardCountPerMember
+                override fun getBatchSize() = teamCount * memberCountPerTeam * cardCountPerMember
             }
         )
 
@@ -97,16 +99,22 @@ class SelectPerformanceTest {
         em.clear()
     }
 
+    @AfterEach
+    fun deleteAll() {
+        cardRepository.deleteAll()
+        memberRepository.deleteAll()
+        teamRepository.deleteAll()
+    }
+
     @Test
     fun lazy_loading() {
         val measuredTime = measureTimeMillis {
-            val teamIds = (1..100 step 5).map { it.toLong() }
-            val teams = teamRepository.findAllByIdIn(teamIds)
+            val teams = teamRepository.findAllWithoutFetch()
 
             teams.forEach { team ->
                 team.members.forEach { member ->
                     member.cards.forEach { card ->
-                        println("card = ${card.name}")
+                        val name = card.name
                     }
                 }
             }
@@ -118,13 +126,29 @@ class SelectPerformanceTest {
     @Test
     fun fetch_join() {
         val measuredTime = measureTimeMillis {
-            val teamIds = (1..100 step 5).map { it.toLong() }
-            val teams = teamRepository.findTeamByIdWithFetch(teamIds)
+            val teams = teamRepository.findAllWithFetch()
 
             teams.forEach { team ->
                 team.members.forEach { member ->
                     member.cards.forEach { card ->
-                        println("card = ${card.name}")
+                        val name = card.name
+                    }
+                }
+            }
+        }
+
+        println(measuredTime)
+    }
+
+    @Test
+    fun entity_graph() {
+        val measuredTime = measureTimeMillis {
+            val teams = teamRepository.findAll()
+
+            teams.forEach { team ->
+                team.members.forEach { member ->
+                    member.cards.forEach { card ->
+                        val name = card.name
                     }
                 }
             }

@@ -9,7 +9,19 @@ import com.yebali.template.entity.Team
 class CustomTeamRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory
 ) : CustomTeamRepository {
-    override fun findTeamByIdWithFetch(teamIds: List<Long>): List<Team> {
+    override fun findAllWithoutFetch(): List<Team> {
+        return jpaQueryFactory.selectFrom(team)
+            .fetch()
+    }
+
+    override fun findAllWithFetch(): List<Team> {
+        return jpaQueryFactory.selectFrom(team)
+            .innerJoin(team.members, member).fetchJoin()
+            .innerJoin(member.cards, card).fetchJoin()
+            .fetch()
+    }
+
+    override fun findTeamByIdsWithFetch(teamIds: List<Long>): List<Team> {
         return jpaQueryFactory.selectFrom(team)
             .innerJoin(team.members, member).fetchJoin()
             .innerJoin(member.cards, card).fetchJoin()
