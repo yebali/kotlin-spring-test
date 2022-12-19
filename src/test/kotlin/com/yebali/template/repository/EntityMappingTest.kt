@@ -1,20 +1,18 @@
 package com.yebali.template.repository
 
-import com.yebali.template.entity.EmbeddableMember
 import com.yebali.template.entity.Member
 import com.yebali.template.entity.Team
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
 
 @SpringBootTest
 @Transactional
-@Rollback(false)
+@Rollback
 class EntityMappingTest {
     @Autowired
     private lateinit var teamRepository: TeamRepository
@@ -30,9 +28,10 @@ class EntityMappingTest {
     @BeforeEach
     fun setupEntities() {
         println("====== SET UP START======")
+
         team = Team(
             name = "my team",
-            embeddableMember = EmbeddableMember("embeddable")
+            members = mutableListOf()
         )
 
         team.addMember(member = Member(name = "member1"))
@@ -50,7 +49,7 @@ class EntityMappingTest {
     fun selectTeam() {
         println("====== SELECT TEAM START ======")
 
-        teamRepository.findTeamById(team.id)
+        teamRepository.findById(team.id)
         em.flush()
 
         println("====== SELECT TEAM END ======")
@@ -70,8 +69,8 @@ class EntityMappingTest {
     fun removeMember() {
         println("====== REMOVE MEMBER START ======")
 
-        val member = memberRepository.findByIdOrNull(2L) ?: throw Exception()
-        team.embeddableMember.members.remove(member)
+        val member = memberRepository.findByName("member1") ?: throw Exception()
+        team.members.remove(member)
         em.flush()
 
         println("====== REMOVE MEMBER END ======")
@@ -81,7 +80,7 @@ class EntityMappingTest {
     fun deleteMember() {
         println("====== SELECT MEMBER START ======")
 
-        val member = memberRepository.findByIdOrNull(2L) ?: throw Exception()
+        val member = memberRepository.findByName("member1") ?: throw Exception()
         memberRepository.delete(member)
         em.flush()
 

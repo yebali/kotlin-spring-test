@@ -3,9 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    // 호환성 참조 : https://github.com/jeremymailen/kotlinter-gradle#compatibility
+    id("org.jmailen.kotlinter") version "3.11.0"
 
-    val kotlinVersion = "1.6.10"
+    val kotlinVersion = "1.7.20"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -14,7 +15,7 @@ plugins {
 
 group = "com.yebali"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -41,12 +42,6 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
-    }
-}
-
-ktlint {
-    reporters {
-        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.JSON)
     }
 }
 

@@ -1,21 +1,25 @@
 package com.yebali.template.entity
 
-import javax.persistence.Embedded
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Team(
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
     var name: String,
 
-    @Embedded
-    val embeddableMember: EmbeddableMember
+    @OneToMany(mappedBy = "team", cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
+    val members: MutableList<Member> = mutableListOf()
+
 ) {
     fun addMember(member: Member) {
-        embeddableMember.addMember(member)
+        this.members.add(member)
+        member.team = this
+    }
+
+    fun expelMember(member: Member) {
+        this.members.remove(member)
+        member.team = null
     }
 }

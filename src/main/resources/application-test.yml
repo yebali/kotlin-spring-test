@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: testpassword
   jpa:
@@ -9,3 +9,7 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: create
+    database: postgresql
+    properties:
+      hibernate:
+        default_batch_fetch_size: 10
