@@ -39,7 +39,7 @@ class SelectPerformanceTest {
 
     @BeforeEach
     fun init() {
-        val teamCount = 100
+        val teamCount = 20
         val memberCountPerTeam = 100
         val cardCountPerMember = 50
 
@@ -114,13 +114,13 @@ class SelectPerformanceTest {
             teams.forEach { team ->
                 team.members.forEach { member ->
                     member.cards.forEach { card ->
-                        val name = card.name
+                        card.name
                     }
                 }
             }
         }
 
-        println(measuredTime)
+        println("$measuredTime ms")
     }
 
     @Test
@@ -131,13 +131,13 @@ class SelectPerformanceTest {
             teams.forEach { team ->
                 team.members.forEach { member ->
                     member.cards.forEach { card ->
-                        val name = card.name
+                        card.name
                     }
                 }
             }
         }
 
-        println(measuredTime)
+        println("$measuredTime ms")
     }
 
     @Test
@@ -148,12 +148,12 @@ class SelectPerformanceTest {
             teams.forEach { team ->
                 team.members.forEach { member ->
                     member.cards.forEach { card ->
-                        val name = card.name
+                        card.name
                     }
                 }
             }
         }
 
-        println(measuredTime)
+        println("$measuredTime ms")
     }
 }

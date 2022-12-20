@@ -7,6 +7,4 @@ interface CustomTeamRepository {
     fun findAllWithoutFetch(): List<Team>
 
     fun findAllWithFetch(): List<Team>
-
-    fun findTeamByIdsWithFetch(teamIds: List<Long>): List<Team>
 }
