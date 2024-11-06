@@ -1,6 +1,11 @@
 package com.yebali.template.entity
 
-import javax.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 
 @Entity
 class Team(
@@ -10,7 +15,7 @@ class Team(
     var name: String,
 
     @OneToMany(mappedBy = "team", cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
-    val members: MutableList<Member> = mutableListOf()
+    val members: MutableList<Member> = mutableListOf(),
 
 ) {
     fun addMember(member: Member) {

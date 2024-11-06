@@ -7,7 +7,6 @@ import com.yebali.template.repository.CardRepository
 import com.yebali.template.repository.MemberRepository
 import com.yebali.template.repository.TeamRepository
 import jakarta.persistence.EntityManager
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,10 +14,8 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.transaction.annotation.Transactional
 import java.sql.PreparedStatement
-import kotlin.system.measureTimeMillis
 
-@Transactional
-class SelectPerformanceTest : SpringBootTestSupport() {
+class QueryAnnotationPersistenceContextTest : SpringBootTestSupport() {
     @Autowired
     private lateinit var teamRepository: TeamRepository
 
@@ -96,61 +93,17 @@ class SelectPerformanceTest : SpringBootTestSupport() {
         em.clear()
     }
 
-    @AfterEach
-    fun deleteAll() {
-        cardRepository.deleteAll()
-        memberRepository.deleteAll()
-        teamRepository.deleteAll()
-    }
-
     @Test
-    fun lazy_loading() {
-        val measuredTime = measureTimeMillis {
-            val teams = teamRepository.findAllWithoutFetch()
+    @Transactional
+    fun `@Query 애노테이션을 사용해도 영속성 컨텍스트에 로드된다`() {
+        val teams = teamRepository.findAllByQueryAnnotation()
 
-            teams.forEach { team ->
-                team.members.forEach { member ->
-                    member.cards.forEach { card ->
-                        card.name
-                    }
+        teams.forEach { team ->
+            team.members.forEach { member ->
+                member.cards.forEach { card ->
+                    println("team:${team.name}, member:${member.name}, card:${card.name}")
                 }
             }
         }
-
-        println("$measuredTime ms")
-    }
-
-    @Test
-    fun fetch_join() {
-        val measuredTime = measureTimeMillis {
-            val teams = teamRepository.findAllWithFetch()
-
-            teams.forEach { team ->
-                team.members.forEach { member ->
-                    member.cards.forEach { card ->
-                        card.name
-                    }
-                }
-            }
-        }
-
-        println("$measuredTime ms")
-    }
-
-    @Test
-    fun entity_graph() {
-        val measuredTime = measureTimeMillis {
-            val teams = teamRepository.findAll()
-
-            teams.forEach { team ->
-                team.members.forEach { member ->
-                    member.cards.forEach { card ->
-                        card.name
-                    }
-                }
-            }
-        }
-
-        println("$measuredTime ms")
     }
 }

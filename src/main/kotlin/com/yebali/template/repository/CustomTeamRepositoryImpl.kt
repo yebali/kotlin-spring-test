@@ -5,10 +5,9 @@ import com.yebali.template.entity.QCard.card
 import com.yebali.template.entity.QMember.member
 import com.yebali.template.entity.QTeam.team
 import com.yebali.template.entity.Team
-import org.hibernate.annotations.QueryHints
 
 class CustomTeamRepositoryImpl(
-    private val jpaQueryFactory: JPAQueryFactory
+    private val jpaQueryFactory: JPAQueryFactory,
 ) : CustomTeamRepository {
     override fun findAllWithoutFetch(): List<Team> {
         return jpaQueryFactory.selectFrom(team)

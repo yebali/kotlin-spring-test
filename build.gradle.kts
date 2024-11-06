@@ -1,12 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.springframework.boot") version "2.6.3"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    // 호환성 참조 : https://github.com/jeremymailen/kotlinter-gradle#compatibility
-    id("org.jmailen.kotlinter") version "3.11.0"
+    id("org.springframework.boot") version "3.3.4"
+    id("io.spring.dependency-management") version "1.1.6"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
 
-    val kotlinVersion = "1.7.20"
+    val kotlinVersion = "1.9.25"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -15,7 +12,12 @@ plugins {
 
 group = "com.yebali"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenCentral()
@@ -27,28 +29,45 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // Logger
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
+
+    // Postgresql
+    runtimeOnly("org.postgresql:postgresql")
 
     // QueryDSL
     val querydslVersion = "5.0.0"
-    implementation("com.querydsl:querydsl-apt:$querydslVersion")
-    implementation("com.querydsl:querydsl-jpa:$querydslVersion")
-    kapt("com.querydsl:querydsl-apt:$querydslVersion:jpa")
+    implementation("com.querydsl:querydsl-jpa:$querydslVersion:jakarta")
+    kapt("com.querydsl:querydsl-apt:$querydslVersion:jakarta")
 
-    runtimeOnly("org.postgresql:postgresql")
+    // Actuator
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+    // Coroutine
+    val coroutineVersion = "1.9.0"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutineVersion")
+
+    /** Test **/
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("com.h2database:h2")
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 }
 
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    version.set("0.49.1")
+}
+
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 tasks.withType<Test> {
