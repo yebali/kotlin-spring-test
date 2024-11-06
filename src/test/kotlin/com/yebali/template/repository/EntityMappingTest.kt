@@ -1,19 +1,18 @@
 package com.yebali.template.repository
 
+import com.yebali.template.SpringBootTestSupport
 import com.yebali.template.entity.Member
 import com.yebali.template.entity.Team
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 
-@SpringBootTest
 @Transactional
 @Rollback
-class EntityMappingTest {
+class EntityMappingTest : SpringBootTestSupport() {
     @Autowired
     private lateinit var teamRepository: TeamRepository
 

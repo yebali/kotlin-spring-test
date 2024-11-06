@@ -3,10 +3,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: testpassword
+    driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: false
     show-sql: true
     open-in-view: false
     hibernate:
       ddl-auto: create
-    database: postgresql

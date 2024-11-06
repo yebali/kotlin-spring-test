@@ -1,15 +1,15 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: testpassword
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   jpa:
     generate-ddl: false
     show-sql: true
     open-in-view: false
     hibernate:
-      ddl-auto: create
-    database: postgresql
+      ddl-auto: create-drop
     properties:
       hibernate:
         default_batch_fetch_size: 50
