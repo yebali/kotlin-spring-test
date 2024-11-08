@@ -18,32 +18,37 @@ class SpringEventHandler {
     @EventListener
     fun handleByEventListener(event: EventListenerEvent) {
         println("[EventListener] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[EventListener] Error Occurred")
         throw RuntimeException()
     }
 
     @Async
     @EventListener
     fun handleByAsyncEventListener(event: AsyncEventListenerEvent) {
-        println("[EventListener] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[AsyncEventListener] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[AsyncEventListener] Error Occurred")
         throw RuntimeException()
     }
 
     @TransactionalEventListener(phase = BEFORE_COMMIT)
     fun handleByTransactionalEventListenerBeforeCommit(event: TransactionalEventListenerBeforeCommitEvent) {
         println("[TransactionalEventListenerBeforeCommit] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[TransactionalEventListenerBeforeCommit] Error Occurred")
         throw RuntimeException()
     }
 
     @Async
     @TransactionalEventListener(phase = BEFORE_COMMIT)
     fun handleByAsyncTransactionalEventListenerBeforeCommit(event: AsyncTransactionalEventListenerBeforeCommitEvent) {
-        println("[TransactionalEventListenerBeforeCommit] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[AsyncTransactionalEventListenerBeforeCommit] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[AsyncTransactionalEventListenerBeforeCommit] Error Occurred")
         throw RuntimeException()
     }
 
     @TransactionalEventListener(phase = AFTER_COMMIT)
     fun handleByTransactionalEventListenerAfterCommit(event: TransactionalEventListenerAfterCommitEvent) {
         println("[TransactionalEventListenerAfterCommit] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
+        println("[TransactionalEventListenerAfterCommit] Error Occurred")
         throw RuntimeException()
     }
 }

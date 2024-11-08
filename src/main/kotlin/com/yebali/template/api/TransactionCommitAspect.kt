@@ -18,18 +18,17 @@ class TransactionCommitAspect {
         val transactionId = UUID.randomUUID()
 
         println("[TransactionCommitAspect] Thread Name: ${Thread.currentThread().name}-${Thread.currentThread().threadId()}")
-        println("Transaction Start. Transaction ID: $transactionId")
+        println("[TransactionCommitAspect] Transaction Start. Transaction ID: $transactionId")
 
         // TransactionSynchronization 등록
         TransactionSynchronizationManager.registerSynchronization(object : TransactionSynchronization {
-            // Transaction이 commit 된 직후 실행
             override fun afterCommit() {
-                println("Transaction committed successfully. $transactionId")
+                println("[TransactionCommitAspect] Transaction committed successfully. $transactionId")
             }
 
-//            override fun afterCompletion(status: Int) {
-//                println("Transaction completed. $transactionId")
-//            }
+            override fun afterCompletion(status: Int) {
+                println("[TransactionCommitAspect] Transaction completed. $transactionId")
+            }
         })
 
         return joinPoint.proceed()
