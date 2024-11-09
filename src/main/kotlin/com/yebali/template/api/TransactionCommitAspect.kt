@@ -13,7 +13,6 @@ import java.util.UUID
 class TransactionCommitAspect {
 
     @Around("@annotation(org.springframework.transaction.annotation.Transactional)")
-    @Throws(Throwable::class)
     fun aroundTransactionalMethod(joinPoint: ProceedingJoinPoint): Any? {
         val transactionId = UUID.randomUUID()
 
