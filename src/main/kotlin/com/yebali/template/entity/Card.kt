@@ -13,9 +13,9 @@ class Card(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    val name: String,
+    var name: String,
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     var member: Member? = null,
-)
+) : BaseEntity()
