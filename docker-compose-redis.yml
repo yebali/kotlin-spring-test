@@ -1,5 +1,7 @@
 version: '3.8'
 
+# 각 노드의 cluster-announce-ip는 호스트의 IP로 변경해야 합니다.
+
 services:
   # -------------------------
   # Redis Node 1
@@ -17,7 +19,7 @@ services:
         --cluster-node-timeout 5000
         --appendonly yes
         --bind 0.0.0.0
-        --cluster-announce-ip 172.16.7.71
+        --cluster-announce-ip 172.16.7.70
         --cluster-announce-port 7001
         --cluster-announce-bus-port 17001
     ports:
@@ -40,7 +42,7 @@ services:
         --cluster-node-timeout 5000
         --appendonly yes
         --bind 0.0.0.0
-        --cluster-announce-ip 172.16.7.71
+        --cluster-announce-ip 172.16.7.70
         --cluster-announce-port 7002
         --cluster-announce-bus-port 17002
     ports:
@@ -63,7 +65,7 @@ services:
         --cluster-node-timeout 5000
         --appendonly yes
         --bind 0.0.0.0
-        --cluster-announce-ip 172.16.7.71
+        --cluster-announce-ip 172.16.7.70
         --cluster-announce-port 7003
         --cluster-announce-bus-port 17003
     ports:
@@ -86,7 +88,7 @@ services:
         --cluster-node-timeout 5000
         --appendonly yes
         --bind 0.0.0.0
-        --cluster-announce-ip 172.16.7.71
+        --cluster-announce-ip 172.16.7.70
         --cluster-announce-port 7004
         --cluster-announce-bus-port 17004
     ports:
@@ -109,7 +111,7 @@ services:
         --cluster-node-timeout 5000
         --appendonly yes
         --bind 0.0.0.0
-        --cluster-announce-ip 172.16.7.71
+        --cluster-announce-ip 172.16.7.70
         --cluster-announce-port 7005
         --cluster-announce-bus-port 17005
     ports:
@@ -132,7 +134,7 @@ services:
         --cluster-node-timeout 5000
         --appendonly yes
         --bind 0.0.0.0
-        --cluster-announce-ip 172.16.7.71
+        --cluster-announce-ip 172.16.7.70
         --cluster-announce-port 7006
         --cluster-announce-bus-port 17006
     ports:
